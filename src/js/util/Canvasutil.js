@@ -122,4 +122,12 @@ export default class CanvasUtil {
 	}
 	 *
 	 */
+
+	getImageData() {
+		const myImageData = this.context.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
+		return myImageData;
+	}
+	setImageData(imageData, x = 0, y = 0) {
+		this.context.putImageData(imageData, x, y);
+	}
 }
