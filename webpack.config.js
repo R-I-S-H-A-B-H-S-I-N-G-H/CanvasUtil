@@ -1,5 +1,6 @@
 // Webpack uses this to work with directories
 const path = require("path");
+const TerserPlugin = require("terser-webpack-plugin");
 
 // This is the main configuration object.
 // Here, you write different options and tell Webpack what to do
@@ -15,6 +16,11 @@ module.exports = {
 		filename: "bundle.js",
 		library: "CanvasUtil",
 		libraryTarget: "umd",
+	},
+
+	optimization: {
+		minimize: true,
+		minimizer: [new TerserPlugin()],
 	},
 
 	// Default mode for Webpack is production.
