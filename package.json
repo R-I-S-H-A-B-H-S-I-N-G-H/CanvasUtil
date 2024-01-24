@@ -4,7 +4,8 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"dev": "webpack --watch",
+		"start": "webpack --watch --mode=production",
+		"dev": "webpack --watch --mode=development",
 		"build": "webpack --config webpack.config.js"
 	},
 	"devDependencies": {
