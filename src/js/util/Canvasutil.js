@@ -5,7 +5,7 @@ export default class CanvasUtil {
 		const canvasRect = this.canvas.getBoundingClientRect();
 		this.canvasCoord = { x: canvasRect.left, y: canvasRect.top };
 
-		this.context = canvas.getContext("2d");
+		this.context = canvas.getContext("2d", { willReadFrequently: true });
 		this.canvasWidth = canvas.width;
 		this.canvasHeight = canvas.height;
 
@@ -129,5 +129,17 @@ export default class CanvasUtil {
 	}
 	setImageData(imageData, x = 0, y = 0) {
 		this.context.putImageData(imageData, x, y);
+	}
+
+	getPixelArr() {
+		return [...this.getImageData().data];
+	}
+
+	setPixelArr(inputArr) {
+		const imageData = this.getImageData();
+		if (inputArr.length != imageData.data.length) return;
+
+		for (let index = 0; index < imageData.data.length; index++) imageData.data[index] = inputArr[index];
+		this.setImageData(imageData);
 	}
 }
