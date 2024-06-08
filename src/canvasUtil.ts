@@ -1,3 +1,4 @@
+import { Command, CanvasCommandUtil } from "./canvasCommandUtil.ts";
 class CanvasUtil {
 	canvas: HTMLCanvasElement;
 	canvasCoord;
@@ -8,6 +9,8 @@ class CanvasUtil {
 	MOUSE_EVENTS;
 	eventSubMap;
 	ANIMATE_EVENTS;
+	commandUtilInstance;
+	GLOBAL_EVENTS;
 
 	constructor(canvas: HTMLCanvasElement) {
 		if (!canvas) throw new Error("INVALID CANVAS");
@@ -18,6 +21,7 @@ class CanvasUtil {
 		this.context = canvas.getContext("2d", { willReadFrequently: true });
 		this.canvasWidth = canvas.width;
 		this.canvasHeight = canvas.height;
+		this.commandUtilInstance = new CanvasCommandUtil(this);
 
 		//Mouse util function
 		this.mouseInfo = { px: 0, py: 0, x: 0, y: 0, up: true };
@@ -27,6 +31,7 @@ class CanvasUtil {
 
 		//for the loop function
 		this.ANIMATE_EVENTS = { START: "START", UPDATE: "UPDATE" };
+		this.GLOBAL_EVENTS = { CHANGE: "CHANGE" };
 		this.startUpdateLoop();
 	}
 
@@ -88,6 +93,9 @@ class CanvasUtil {
 		if (!this.context) return;
 		this.context.fillRect(x, y, w, h);
 		this.context.strokeRect(x, y, w, h);
+
+		const command: Command = { type: "RECT", props: { x, y, w, h } };
+		this.onCanvasAction(command);
 	}
 
 	stroke(r = 0, g = 0, b = 0, a = 1) {
@@ -95,6 +103,9 @@ class CanvasUtil {
 
 		this.context.stroke();
 		this.context.strokeStyle = `rgba(${r},${g},${b},${a})`;
+
+		const command: Command = { type: "STROKE", props: { r, g, b, a } };
+		this.onCanvasAction(command);
 	}
 
 	fill(r = 0, g = 0, b = 0, a = 1) {
@@ -102,6 +113,9 @@ class CanvasUtil {
 
 		this.context.fill();
 		this.context.fillStyle = `rgb(${r}, ${g}, ${b}, ${a})`;
+
+		const command: Command = { type: "FILL", props: { r, g, b, a } };
+		this.onCanvasAction(command);
 	}
 
 	background(r = 0, g = 0, b = 0, a = 1) {
@@ -121,6 +135,9 @@ class CanvasUtil {
 
 		this.context.beginPath();
 		this.context.arc(x, y, r, 0, 2 * Math.PI);
+
+		const command: Command = { type: "CIRCLE", props: { x, y, r } };
+		this.onCanvasAction(command);
 	}
 
 	line(prevX = 0, prevY = 0, curX = 0, curY = 0, strokeSize = 1) {
@@ -132,6 +149,9 @@ class CanvasUtil {
 		this.context.moveTo(prevX, prevY);
 		this.context.lineTo(curX, curY);
 		this.context.stroke();
+
+		const command: Command = { type: "LINE", props: { prevX, prevY, curX, curY, strokeSize } };
+		this.onCanvasAction(command);
 	}
 
 	/**
@@ -171,6 +191,18 @@ class CanvasUtil {
 
 		for (let index = 0; index < imageData.data.length; index++) imageData.data[index] = inputArr[index];
 		this.setImageData(imageData);
+	}
+
+	exec(command: Command) {
+		this.commandUtilInstance.execCommand(command);
+	}
+
+	onCanvasAction(command: Command) {
+		this.publishEvents(this.GLOBAL_EVENTS.CHANGE, command);
+	}
+
+	onChange(handler = () => {}) {
+		this.subscribeEvents(this.GLOBAL_EVENTS.CHANGE, handler);
 	}
 }
 

@@ -9,6 +9,7 @@
 
 	<div style="height: 100vh; width: 100vw; background-color: lightblue">
 		<canvas id="canvas"></canvas>
+		<canvas id="canvascopy"></canvas>
 	</div>
 	<body>
 		<style>
@@ -19,15 +20,22 @@
 		</style>
 		<script>
 			const canvasEle = document.querySelector("#canvas");
-			const canavsObj = CanvasUtil.init(canvasEle, 400, 400);
-			console.log(canavsObj);
-			canavsObj.background(200, 150, 200);
-			canavsObj.onMouseMove((e) => {
+			const canvasObj = CanvasUtil.init(canvasEle, 400, 400);
+
+			const canvasEleCopy = document.querySelector("#canvascopy");
+			const canvasCopyObj = CanvasUtil.init(canvasEleCopy, 400, 400);
+			canvasObj.onChange((e) => {
+				canvasCopyObj.exec(e);
+			});
+
+			canvasObj.background(200, 150, 200);
+
+			canvasObj.onMouseMove((e) => {
 				const { x, y, up } = e;
 				if (up) return;
-				canavsObj.stroke(0, 0, 0);
-				canavsObj.fill(0, 0, 0);
-				canavsObj.dot(x, y, 100);
+				canvasObj.stroke(0, 0, 0);
+				canvasObj.fill(0, 0, 0);
+				canvasObj.dot(x, y, 10);
 			});
 		</script>
 	</body>
