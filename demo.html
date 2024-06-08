@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<script src="./dist/canvasUtil.js"></script>
+	</head>
+
+	<div style="height: 100vh; width: 100vw; background-color: lightblue">
+		<canvas id="canvas"></canvas>
+	</div>
+	<body>
+		<style>
+			* {
+				padding: 0;
+				margin: 0;
+			}
+		</style>
+		<script>
+			const canavsObj = CanvasUtil.init("#canvas", 400, 400);
+			canavsObj.background(200, 150, 200);
+			canavsObj.onMouseMove((e) => {
+				const { x, y, up } = e;
+				if (up) return;
+				canavsObj.stroke(0, 0, 0);
+				canavsObj.fill(0, 0, 0);
+				canavsObj.dot(x, y, 100);
+			});
+		</script>
+	</body>
+</html>

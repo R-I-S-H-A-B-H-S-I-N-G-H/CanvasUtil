@@ -1,4 +1,4 @@
-export default class CanvasUtil {
+class CanvasUtil {
 	constructor(canvas) {
 		if (!canvas) throw new Error("INVALID CANVAS");
 		this.canvas = canvas;
@@ -32,12 +32,12 @@ export default class CanvasUtil {
 	}
 
 	startMouseEvent() {
-		document.addEventListener("mousemove", (event) => {
+		this.canvas.addEventListener("mousemove", (event) => {
 			this.updateMouseCorrds(event);
 			this.publishEvents(this.MOUSE_EVENTS.MOVE, this.mouseInfo);
 		});
 
-		document.addEventListener("mousedown", () => {
+		this.canvas.addEventListener("mousedown", () => {
 			this.mouseInfo.up = false;
 		});
 
@@ -143,3 +143,17 @@ export default class CanvasUtil {
 		this.setImageData(imageData);
 	}
 }
+
+function init(canvas, height, width) {
+	if (typeof canvas == "string") canvas = document.querySelector(canvas);
+	if (!canvas) throw new Error("Invalid canvas");
+
+	console.log("this is your canvas :: ", canvas);
+	if (height && width) {
+		canvas.height = height;
+		canvas.width = width;
+	}
+	return new CanvasUtil(canvas);
+}
+
+export { CanvasUtil, init };
