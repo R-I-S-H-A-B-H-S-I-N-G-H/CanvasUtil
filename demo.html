@@ -18,7 +18,9 @@
 			}
 		</style>
 		<script>
-			const canavsObj = CanvasUtil.init("#canvas", 400, 400);
+			const canvasEle = document.querySelector("#canvas");
+			const canavsObj = CanvasUtil.init(canvasEle, 400, 400);
+			console.log(canavsObj);
 			canavsObj.background(200, 150, 200);
 			canavsObj.onMouseMove((e) => {
 				const { x, y, up } = e;

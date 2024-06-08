@@ -1,5 +1,15 @@
 class CanvasUtil {
-	constructor(canvas) {
+	canvas: HTMLCanvasElement;
+	canvasCoord;
+	context;
+	canvasWidth: number;
+	canvasHeight: number;
+	mouseInfo: { px: number; py: number; x: number; y: number; up: boolean };
+	MOUSE_EVENTS;
+	eventSubMap;
+	ANIMATE_EVENTS;
+
+	constructor(canvas: HTMLCanvasElement) {
 		if (!canvas) throw new Error("INVALID CANVAS");
 		this.canvas = canvas;
 		const canvasRect = this.canvas.getBoundingClientRect();
@@ -27,7 +37,7 @@ class CanvasUtil {
 		}, 10);
 	}
 
-	update(handler) {
+	update(handler = () => {}) {
 		this.subscribeEvents(this.ANIMATE_EVENTS.UPDATE, handler);
 	}
 
@@ -46,21 +56,27 @@ class CanvasUtil {
 		});
 	}
 
-	onMouseMove(handler) {
+	onMouseMove(handler = () => {}) {
 		this.subscribeEvents(this.MOUSE_EVENTS.MOVE, handler);
 	}
 
-	subscribeEvents(event, handler) {
+	subscribeEvents(event: any, handler = () => {}) {
+		// @ts-ignore
 		this.eventSubMap[event] = this.eventSubMap[event] || [];
+
+		// @ts-ignore
 		this.eventSubMap[event].push(handler);
 	}
 
-	publishEvents(event, data) {
+	publishEvents(event: any, data: any) {
+		// @ts-ignore
 		this.eventSubMap[event] = this.eventSubMap[event] || [];
+
+		// @ts-ignore
 		this.eventSubMap[event].map((handler) => handler(data));
 	}
 
-	updateMouseCorrds(event) {
+	updateMouseCorrds(event: MouseEvent) {
 		const { clientX, clientY } = event;
 		this.mouseInfo.px = this.mouseInfo.x;
 		this.mouseInfo.py = this.mouseInfo.y;
@@ -68,42 +84,53 @@ class CanvasUtil {
 		this.mouseInfo.y = clientY - this.canvasCoord.y;
 	}
 
-	rect(x, y, w, h) {
+	rect(x = 0, y = 0, w = 0, h = 0) {
+		if (!this.context) return;
 		this.context.fillRect(x, y, w, h);
 		this.context.strokeRect(x, y, w, h);
 	}
 
-	stroke(r, g, b, a = 1) {
+	stroke(r = 0, g = 0, b = 0, a = 1) {
+		if (!this.context) return;
+
 		this.context.stroke();
 		this.context.strokeStyle = `rgba(${r},${g},${b},${a})`;
 	}
 
-	fill(r, g, b, a = 1) {
+	fill(r = 0, g = 0, b = 0, a = 1) {
+		if (!this.context) return;
+
 		this.context.fill();
 		this.context.fillStyle = `rgb(${r}, ${g}, ${b}, ${a})`;
 	}
 
-	background(r, g, b, a = 1) {
+	background(r = 0, g = 0, b = 0, a = 1) {
+		if (!this.context) return;
+
 		this.fill(r, g, b, a);
 		this.stroke(r, g, b, a);
 		this.rect(0, 0, this.canvasWidth, this.canvasHeight);
 	}
 
-	dot(x, y, weight = 5) {
+	dot(x = 0, y = 0, weight = 5) {
 		this.circle(x, y, weight);
 	}
 
-	circle(x, y, r) {
+	circle(x = 0, y = 0, r = 1) {
+		if (!this.context) return;
+
 		this.context.beginPath();
 		this.context.arc(x, y, r, 0, 2 * Math.PI);
 	}
 
-	line(prevx, prevy, curx, cury, strokeSize = 1) {
+	line(prevX = 0, prevY = 0, curX = 0, curY = 0, strokeSize = 1) {
+		if (!this.context) return;
+
 		this.context.lineCap = "round";
 		this.context.lineWidth = strokeSize;
 		this.context.beginPath();
-		this.context.moveTo(prevx, prevy);
-		this.context.lineTo(curx, cury);
+		this.context.moveTo(prevX, prevY);
+		this.context.lineTo(curX, curY);
 		this.context.stroke();
 	}
 
@@ -123,11 +150,13 @@ class CanvasUtil {
 	 *
 	 */
 
-	getImageData() {
+	getImageData(): ImageData {
+		if (!this.context) throw new Error("Context not defined");
 		const myImageData = this.context.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
 		return myImageData;
 	}
-	setImageData(imageData, x = 0, y = 0) {
+	setImageData(imageData: ImageData, x = 0, y = 0) {
+		if (!this.context) throw new Error("Context not defined");
 		this.context.putImageData(imageData, x, y);
 	}
 
@@ -135,7 +164,8 @@ class CanvasUtil {
 		return [...this.getImageData().data];
 	}
 
-	setPixelArr(inputArr) {
+	setPixelArr(updatedImageData: ImageData) {
+		const inputArr = updatedImageData.data;
 		const imageData = this.getImageData();
 		if (inputArr.length != imageData.data.length) return;
 
@@ -144,8 +174,7 @@ class CanvasUtil {
 	}
 }
 
-function init(canvas, height, width) {
-	if (typeof canvas == "string") canvas = document.querySelector(canvas);
+function init(canvas: HTMLCanvasElement, height?: number, width?: number) {
 	if (!canvas) throw new Error("Invalid canvas");
 
 	console.log("this is your canvas :: ", canvas);
