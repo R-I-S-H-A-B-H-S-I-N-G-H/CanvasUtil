@@ -36,11 +36,11 @@ export class CanvasCommand {
 	execCommand(command: Command) {
 		const { type, props } = command;
 
-		if (type === CommandType.FILL) return this.canvasUtilInstance.fill(props.r, props.g, props.b, props.a);
-		if (type === CommandType.STROKE) return this.canvasUtilInstance.stroke(props.r, props.g, props.b, props.a);
+		if (type === CommandType.FILL) return this.canvasUtilInstance.fill(props.r, props.g, props.b, props.a, true);
+		if (type === CommandType.STROKE) return this.canvasUtilInstance.stroke(props.r, props.g, props.b, props.a, true);
 
 		//shapes
-		if (type === CommandType.RECT) return this.canvasUtilInstance.rect(props.x, props.y, props.w, props.h);
-		if (type === CommandType.CIRCLE) return this.canvasUtilInstance.circle(props.x, props.y, props.r);
+		if (type === CommandType.RECT) return this.canvasUtilInstance.rect(props.x, props.y, props.w, props.h, true);
+		if (type === CommandType.CIRCLE) return this.canvasUtilInstance.circle(props.x, props.y, props.r, true);
 	}
 }

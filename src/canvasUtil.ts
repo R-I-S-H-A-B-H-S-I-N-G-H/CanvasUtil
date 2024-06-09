@@ -91,33 +91,33 @@ class CanvasUtil {
 		this.mouseInfo.y = clientY - this.canvasCoord.y;
 	}
 
-	rect(x = 0, y = 0, w = 0, h = 0) {
+	rect(x = 0, y = 0, w = 0, h = 0, other = false) {
 		if (!this.context) return;
 		this.context.fillRect(x, y, w, h);
 		this.context.strokeRect(x, y, w, h);
 
 		const command: Command = { type: CommandType.RECT, props: { x, y, w, h } };
-		this.onCanvasAction(command);
+		this.onCanvasAction(command, other);
 	}
 
-	stroke(r = 0, g = 0, b = 0, a = 1) {
+	stroke(r = 0, g = 0, b = 0, a = 1, other = false) {
 		if (!this.context) return;
 
 		this.context.stroke();
 		this.context.strokeStyle = `rgba(${r},${g},${b},${a})`;
 
 		const command: Command = { type: CommandType.STROKE, props: { r, g, b, a } };
-		this.onCanvasAction(command);
+		this.onCanvasAction(command, other);
 	}
 
-	fill(r = 0, g = 0, b = 0, a = 1) {
+	fill(r = 0, g = 0, b = 0, a = 1, other = false) {
 		if (!this.context) return;
 
 		this.context.fill();
 		this.context.fillStyle = `rgb(${r}, ${g}, ${b}, ${a})`;
 
 		const command: Command = { type: CommandType.FILL, props: { r, g, b, a } };
-		this.onCanvasAction(command);
+		this.onCanvasAction(command, other);
 	}
 
 	background(r = 0, g = 0, b = 0, a = 1) {
@@ -132,17 +132,17 @@ class CanvasUtil {
 		this.circle(x, y, weight);
 	}
 
-	circle(x = 0, y = 0, r = 1) {
+	circle(x = 0, y = 0, r = 1, other = false) {
 		if (!this.context) return;
 
 		this.context.beginPath();
 		this.context.arc(x, y, r, 0, 2 * Math.PI);
 
 		const command: Command = { type: CommandType.CIRCLE, props: { x, y, r } };
-		this.onCanvasAction(command);
+		this.onCanvasAction(command, other);
 	}
 
-	line(prevX = 0, prevY = 0, curX = 0, curY = 0, strokeSize = 1) {
+	line(prevX = 0, prevY = 0, curX = 0, curY = 0, strokeSize = 1, other = false) {
 		if (!this.context) return;
 
 		this.context.lineCap = "round";
@@ -153,7 +153,7 @@ class CanvasUtil {
 		this.context.stroke();
 
 		const command: Command = { type: CommandType.LINE, props: { prevX, prevY, curX, curY, strokeSize } };
-		this.onCanvasAction(command);
+		this.onCanvasAction(command, other);
 	}
 
 	/**
@@ -199,8 +199,8 @@ class CanvasUtil {
 		this.commandUtilInstance.execCommand(command);
 	}
 
-	onCanvasAction(command: Command) {
-		this.publishEvents(this.GLOBAL_EVENTS.CHANGE, command);
+	onCanvasAction(command: Command, other: boolean) {
+		this.publishEvents(this.GLOBAL_EVENTS.CHANGE, { command, other });
 	}
 
 	onChange(handler = () => {}) {
