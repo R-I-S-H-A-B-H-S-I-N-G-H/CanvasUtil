@@ -1,5 +1,5 @@
 import { Command, CanvasCommand } from "./canvasCommand.ts";
-import CommandType from "./CommandType.ts";
+import CommandType from "./enums/CommandType.ts";
 
 class CanvasUtil {
 	canvas: HTMLCanvasElement;

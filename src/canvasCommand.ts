@@ -1,5 +1,5 @@
 import { CanvasUtil } from "./canvasUtil.ts";
-import CommandType from "./CommandType.ts";
+import CommandType from "./enums/CommandType.ts";
 
 export interface Command {
 	// type: "RECT" | "DOT" | "CIRCLE" | "LINE" |
