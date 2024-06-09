@@ -1,4 +1,6 @@
-import { Command, CanvasCommandUtil } from "./canvasCommandUtil.ts";
+import { Command, CanvasCommand } from "./canvasCommand.ts";
+import CommandType from "./CommandType.ts";
+
 class CanvasUtil {
 	canvas: HTMLCanvasElement;
 	canvasCoord;
@@ -21,7 +23,7 @@ class CanvasUtil {
 		this.context = canvas.getContext("2d", { willReadFrequently: true });
 		this.canvasWidth = canvas.width;
 		this.canvasHeight = canvas.height;
-		this.commandUtilInstance = new CanvasCommandUtil(this);
+		this.commandUtilInstance = new CanvasCommand(this);
 
 		//Mouse util function
 		this.mouseInfo = { px: 0, py: 0, x: 0, y: 0, up: true };
@@ -94,7 +96,7 @@ class CanvasUtil {
 		this.context.fillRect(x, y, w, h);
 		this.context.strokeRect(x, y, w, h);
 
-		const command: Command = { type: "RECT", props: { x, y, w, h } };
+		const command: Command = { type: CommandType.RECT, props: { x, y, w, h } };
 		this.onCanvasAction(command);
 	}
 
@@ -104,7 +106,7 @@ class CanvasUtil {
 		this.context.stroke();
 		this.context.strokeStyle = `rgba(${r},${g},${b},${a})`;
 
-		const command: Command = { type: "STROKE", props: { r, g, b, a } };
+		const command: Command = { type: CommandType.STROKE, props: { r, g, b, a } };
 		this.onCanvasAction(command);
 	}
 
@@ -114,7 +116,7 @@ class CanvasUtil {
 		this.context.fill();
 		this.context.fillStyle = `rgb(${r}, ${g}, ${b}, ${a})`;
 
-		const command: Command = { type: "FILL", props: { r, g, b, a } };
+		const command: Command = { type: CommandType.FILL, props: { r, g, b, a } };
 		this.onCanvasAction(command);
 	}
 
@@ -136,7 +138,7 @@ class CanvasUtil {
 		this.context.beginPath();
 		this.context.arc(x, y, r, 0, 2 * Math.PI);
 
-		const command: Command = { type: "CIRCLE", props: { x, y, r } };
+		const command: Command = { type: CommandType.CIRCLE, props: { x, y, r } };
 		this.onCanvasAction(command);
 	}
 
@@ -150,7 +152,7 @@ class CanvasUtil {
 		this.context.lineTo(curX, curY);
 		this.context.stroke();
 
-		const command: Command = { type: "LINE", props: { prevX, prevY, curX, curY, strokeSize } };
+		const command: Command = { type: CommandType.LINE, props: { prevX, prevY, curX, curY, strokeSize } };
 		this.onCanvasAction(command);
 	}
 
