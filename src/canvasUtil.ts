@@ -1,5 +1,5 @@
-import { Command, CanvasCommand } from "./canvasCommand.ts";
-import CommandType from "./enums/CommandType.ts";
+import { Command, CanvasCommand } from "./canvasCommand";
+import CommandType from "./enums/CommandType";
 
 class CanvasUtil {
 	canvas: HTMLCanvasElement;
@@ -172,7 +172,7 @@ class CanvasUtil {
 	 *
 	 */
 
-	getImageData(): ImageData {
+	getImageData(): any {
 		if (!this.context) throw new Error("Context not defined");
 		const myImageData = this.context.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
 		return myImageData;

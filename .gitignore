@@ -1,5 +1,6 @@
 /node_modules
 /test**.**
-/demo**.**
+/demo**
+/test**
 /dist
 /.vscode
